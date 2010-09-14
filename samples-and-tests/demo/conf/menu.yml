@@ -1,0 +1,39 @@
+
+Menu(root2):
+    name: play
+    url: /custom
+    
+Menu(doc2):
+    name: learn
+    url: /custom/doc
+    title: play documentation
+    parent: root2
+    
+Menu(com2):
+    name: community
+    url: /custom/community?group=play&module=menu
+    title: play community
+    parent: root2
+    
+Menu(code2):
+    name: code
+    url: /custom/code
+    parent: root2
+    
+Menu(module2):
+    name: modules
+    url: /custom/modules
+    parent: root2
+    
+Menu(akka2):
+    name: akka support
+    url: /custom/modules/akka
+    parent: module2
+    
+Menu(bespin2):
+    name: Bespin online editor
+    url: /custom/modules/bespin
+    parent: module2
+
+    
+

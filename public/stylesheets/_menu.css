@@ -1,0 +1,18 @@
+ul._menu_list {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+ul._menu_list li {
+    background:url(../images/collapsed.png) no-repeat left 5px;
+    padding-left: 1em;
+}
+
+ul._menu_list li._menu_expanded {
+    background-image:url(../images/expanded.png)
+}
+
+ul._menu_list li._menu_current > span,
+ul._menu_list li._menu_current > a {
+    font-weight: bold;
+}

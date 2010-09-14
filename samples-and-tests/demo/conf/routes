@@ -1,0 +1,30 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET /		DefaultMenu.index
+GET /doc	DefaultMenu.doc
+GET /community DefaultMenu.community
+GET /code	DefaultMenu.code
+GET /modules DefaultMenu.modules
+GET /modules/{id} DefaultMenu.modules
+
+GET /custom		CustomMenu.index
+GET /custom/doc	CustomMenu.doc
+GET /custom/community CustomMenu.community
+GET /custom/code	CustomMenu.code
+GET /custom/modules CustomMenu.modules
+GET /custom/modules/{id} CustomMenu.modules
+
+# Import Menu routes
+*       /menu                                       module:menu
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+GET     /css/                                staticDir:public/stylesheets
+GET     /js/                                staticDir:public/javascripts
+GET     /img/                                staticDir:public/images
+
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}

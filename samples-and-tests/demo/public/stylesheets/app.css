@@ -1,0 +1,33 @@
+ul.button {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+ul.button li {
+    margin:2em;
+    display:block;
+    float:left;
+    clear:both;
+    margin:0 7px 0 0;
+    background-color:#f5f5f5;
+    border:1px solid #dedede;
+    border-top:1px solid #eee;
+    border-left:1px solid #eee;
+
+    font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    font-size:12px;
+    line-height:130%;
+    text-decoration:none;
+    font-weight:bold;
+    color:#565656;
+    cursor:pointer;
+    padding:5px 10px 6px 7px; /* Links */
+}
+
+ul.button li a {
+    text-decoration: none;
+}
+
+ul.button li.current {
+    cursor:default;
+}

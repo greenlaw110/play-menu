@@ -1,0 +1,9 @@
+%{
+    def caller = _caller
+    while (caller._caller) caller = caller._caller
+    
+    def _menu_top_list = caller._menu_top_list
+    def _menu_current = caller._menu_current
+}%
+
+#{menu.menu_ menu_top_list:_menu_top_list, menu_current:_menu_current, menu_context: _menu_context/}
