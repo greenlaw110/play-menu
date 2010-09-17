@@ -6,12 +6,14 @@
     _menu_current = _menu_current?:caller._menu_current
     _menu_context = _menu_context?:caller._menu_context
     _menu_tag = _menu_tag?:caller._menu_tag
+    _menu_no_global = _menu_no_global?:caller._menu_no_global
 }%
 
-#{menu.menu_ menu_top_list:_menu_top_list, menu_current: _menu_current, menu_context: _menu_context, menu_tag: _menu_tag /}
+#{menu.menu_ menu_top_list:_menu_top_list, menu_current: _menu_current, menu_context: _menu_context, menu_tag: _menu_tag, menu_no_global: _menu_no_global, menu_debug: _menu_debug/}
 
 #{if _menu_debug}
-current: ${_menu_current?:caller._menu_current} <br/>
-context: ${_menu_context?:caller._menu_context} <br/>
-tag: ${_menu_tag?:caller._menu_tag} <br/>
+current: ${_menu_current} <br/>
+context: ${_menu_context} <br/>
+tag: ${_menu_tag} <br/>
+no_global: ${_menu_no_global}
 #{/if}

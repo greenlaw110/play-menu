@@ -10,8 +10,7 @@ _Menu(logout):
     name: logout
     url: /logout
     tags:
-       - play
-       - logout
+       - _global
 
 _Menu(doc):
     name: learn

@@ -3,8 +3,18 @@
 	%{
 		def showByContext = _menu_context == null || _menu_context.equalsIgnoreCase(mi.context)
 		def showByTag = _menu_tag == null || mi.taggedBy(_menu_tag)
-		def showMenu = showByContext && showByTag
+		def showGlobal = !_menu_no_global && mi.taggedBy('_global')
+		def showMenu = showGlobal || showByContext && showByTag
 	}%
+	#{if _menu_debug}
+		<br/>
+		_menu_no_global: ${_menu_no_global} <br/>
+		tg_global: ${mi.taggedBy('_global')} <br/>
+		showGlobal: ${showGlobal} <br/>
+		showByContext: ${showByContext} <br/>
+		showByTag: ${showByTag} <br/>
+		showMenu: ${showMenu} <br/>
+	#{/if}
 	#{if showMenu}
 		%{
 		def url = mi.url?.split('\\?')[0]
@@ -22,7 +32,7 @@
 				</a>
 			#{/if}
 			#{if mi.subMenus.size() > 0}
-				#{menu.menu_ menu_top_list:mi.subMenus, menu_current: _menu_current, menu_context: _menu_context, menu_tag: _menu_tag/}
+				#{menu.menu_ menu_top_list:mi.subMenus, menu_current: _menu_current, menu_context: _menu_context, menu_tag: _menu_tag, menu_no_global: _menu_no_global/}
 			#{/if}
 		</li>
 	#{/if}

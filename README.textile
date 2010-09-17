@@ -149,6 +149,8 @@ static void setMenuTag() {
 <div id="admin-menu">#{menu.menu menu_tag: 'admin' /}</div>
 <div id="user-menu">#{menu.menu menu_tag: 'user' /></div>
 
+p. Note: menu items tagged with '_global' will always get displayed unless '_menu_no_global' options set to true
+
 h3. <a>Other RenderArgs</a>
 
 * _menu_top_list: a list of IMenu object to be rendered in the web page
