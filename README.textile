@@ -12,7 +12,7 @@ h2. <a>features</a>
 * Provide easy to use menu tag to insert navigation menu to your web page
 * Support current menu
 * Support hierarchical structure
-* Support menu tag (not play template tag) to group your menus
+* Using label to group your menus
 
 h2. TODO List
 
@@ -40,7 +40,7 @@ bc.. # Sample _menu.yml
 _Menu(play):
     name: play
     url: /
-    tags
+    labels:
         - play
     
 _Menu(doc):
@@ -48,7 +48,7 @@ _Menu(doc):
     url: /doc
     title: play documentation
     parent: play
-    tags
+    labels:
         - play
         - doc
     
@@ -57,7 +57,7 @@ _Menu(com):
     url: /community
     title: play community
     parent: play
-    tags:
+    labels:
         - play
         - community
     
@@ -65,7 +65,7 @@ _Menu(code):
     name: code
     url: /code
     parent: play
-    tags:
+    labels:
         - play
         - code
     
@@ -73,7 +73,7 @@ _Menu(module):
     name: modules
     url: /modules
     parent: play
-    tags:
+    labels:
         - play
         - module
     
@@ -81,7 +81,7 @@ _Menu(akka):
     name: akka support
     url: /modules/akka
     parent: module
-    tags:
+    labels:
         - play
         - module
     
@@ -89,15 +89,15 @@ _Menu(bespin):
     name: Bespin online editor
     url: /modules/bespin
     parent: module
-    tags:
+    labels:
         - play
         - module
     
 _Menu(user):
     name: Manage user
     url: /admin/users
-    context: admin # context is deprecated, use tags instead
-    tags:
+    context: admin # context is deprecated, use labels instead
+    labels:
         - play
         - admin
 
@@ -127,7 +127,7 @@ p. It's possible that you will not be able to use the default Menu impl. One obv
 
 h3. <a>Define Context</a>
 
-p. Context is deprecated, use Tags instead
+p. Context is deprecated, use label instead
 p. Normally you won't touch renderArgs because the module is smart enough to determine your top menus and the current menu being selected. One common case you need to touch with the renderArgs is to define your context, for example, in the base controller of your administration controllers, you will probably have the following codes:
 
 bc.. @Before
@@ -135,21 +135,21 @@ static void setMenuContext() {
     renderArgs.put("_menu_context", "admin");
 }
 
-h3. <a>Use tags to group menu</a>
+h3. <a>Use label to group menu</a>
 
-p. First you need to assign tags to menu items in your menu definition file "_menu.yml" if you use default implementation. Then you can define require menu.menu tag to display menus which are associated with specific tag. You can do it in two ways:
+p. First you need to assign label(s) to menu items in your menu definition file "_menu.yml" if you use default implementation. Then you can define require menu.menu tag to display menus which are associated with specific label. You can do it in two ways:
 
-bc.. /* apply tags method 1: use controller to set the tag */
+bc.. /* apply label method 1: use controller to set the label */
 @Before
-static void setMenuTag() {
-    renderArgs.put("_menu_tag", "play");
+static void setMenuLabel() {
+    renderArgs.put("_menu_label", "play");
 }
 
-/* apply tags method 2: assign tag in your template file */
-<div id="admin-menu">#{menu.menu menu_tag: 'admin' /}</div>
-<div id="user-menu">#{menu.menu menu_tag: 'user' /></div>
+/* apply label method 2: assign label in your template file */
+<div id="admin-menu">#{menu.menu menu_label: 'admin' /}</div>
+<div id="user-menu">#{menu.menu menu_label: 'user' /></div>
 
-p. Note: menu items tagged with '_global' will always get displayed unless '_menu_no_global' options set to true
+p. Note: menu items labeled with '_global' will always get displayed unless '_menu_no_global' options set to true
 
 h3. <a>Other RenderArgs</a>
 

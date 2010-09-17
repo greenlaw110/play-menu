@@ -16,13 +16,19 @@ public class Menu extends Model implements IMenu {
     
     @Indexed(unique=true, dropDups=true)
     public String name;
+    public String cssClass;
     public String url;
     public String title;
     public String context;
-    public Set<String> tags;
+    public Set<String> labels;
     
     @Reference(value="p")
     public Menu parent;
+    
+    @Override
+    public String toString() {
+        return name;
+    }
     
     public static Menu findByName(String name) {
         return (Menu)filter("name", name).get();
@@ -37,6 +43,15 @@ public class Menu extends Model implements IMenu {
     public void setName(String name) {
         if (null == name) throw new NullPointerException();
         this.name = name;
+    }
+    
+    public String getCssClass() {
+        return cssClass;
+    }
+    
+    @Override
+    public void setCssClass(String cssClass) {
+        this.cssClass = cssClass;
     }
     
     @Override
@@ -70,15 +85,15 @@ public class Menu extends Model implements IMenu {
     }
     
     @Override
-    public boolean taggedBy(String tag) {
-        if (null == tags) return false;
-        return tags.contains(tag);
+    public boolean hasLabel(String label) {
+        if (null == labels) return false;
+        return labels.contains(label);
     }
     
     @Override
-    public void setTags(Set<String> tags) {
-        if (null == tags) return;
-        this.tags = new HashSet(tags);
+    public void setLabels(Set<String> labels) {
+        if (null == labels) return;
+        this.labels = new HashSet(labels);
     }
     
     @Override
@@ -97,8 +112,8 @@ public class Menu extends Model implements IMenu {
     }
     
     @Override
-    public List<IMenu> getSubMenusByTag(String tag) {
-        return Menu.filter("parent", this).filter("tags", tag).asList();
+    public List<IMenu> getSubMenusByLabel(String label) {
+        return Menu.filter("parent", this).filter("labels", label).asList();
     }
     
     @Override
@@ -112,7 +127,7 @@ public class Menu extends Model implements IMenu {
     }
     
     @Override
-    public List<IMenu> getTopLevelMenusByTag(String tag) {
-        return filter("parent", null).filter("tags", tag).asList();
+    public List<IMenu> getTopLevelMenusByLabel(String label) {
+        return filter("parent", null).filter("labels", label).asList();
     }
 }

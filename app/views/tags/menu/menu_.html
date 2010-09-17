@@ -2,26 +2,29 @@
 #{list items: _menu_top_list, as: 'mi'}
 	%{
 		def showByContext = _menu_context == null || _menu_context.equalsIgnoreCase(mi.context)
-		def showByTag = _menu_tag == null || mi.taggedBy(_menu_tag)
-		def showGlobal = !_menu_no_global && mi.taggedBy('_global')
-		def showMenu = showGlobal || showByContext && showByTag
+		def showBylabel = _menu_label == null || mi.hasLabel(_menu_label)
+		def showGlobal = !_menu_no_global && mi.hasLabel('_global')
+		def showMenu = showGlobal || showByContext && showBylabel
 	}%
 	#{if _menu_debug}
 		<br/>
+		<b>${mi}</b> <br/>
 		_menu_no_global: ${_menu_no_global} <br/>
-		tg_global: ${mi.taggedBy('_global')} <br/>
+	    _menu_context: ${_menu_context} </br>
+		tg_global: ${mi.hasLabel('_global')} <br/>
 		showGlobal: ${showGlobal} <br/>
 		showByContext: ${showByContext} <br/>
-		showByTag: ${showByTag} <br/>
+		showBylabel: ${showBylabel} <br/>
 		showMenu: ${showMenu} <br/>
 	#{/if}
 	#{if showMenu}
 		%{
 		def url = mi.url?.split('\\?')[0]
+		def cls = mi.cssClass ? mi.cssClass + " " : ""
 		def isCur = url.endsWith(_menu_current?.split('\\?')[0])
-		def cls=isCur?"_menu_current":"";
+		cls+=isCur?"_menu_current":"";
 		cls+=mi.subMenus.size()>0?" _menu_expanded":""
-		def clsStr=cls==""?"":"class='"+cls+"'"
+		def clsStr = "class='"+cls+"'"
 		}%
 		<li ${clsStr}>
 			#{if mi.url != null && !isCur}
@@ -32,7 +35,7 @@
 				</a>
 			#{/if}
 			#{if mi.subMenus.size() > 0}
-				#{menu.menu_ menu_top_list:mi.subMenus, menu_current: _menu_current, menu_context: _menu_context, menu_tag: _menu_tag, menu_no_global: _menu_no_global/}
+				#{menu.menu_ menu_top_list:mi.subMenus, menu_current: _menu_current, menu_context: _menu_context, menu_label: _menu_label, menu_no_global: _menu_no_global/}
 			#{/if}
 		</li>
 	#{/if}

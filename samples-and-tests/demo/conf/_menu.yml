@@ -1,7 +1,7 @@
 _Menu(root):
     name: play
     url: /
-    tags: 
+    labels: 
        - play
        - root
        - french
@@ -9,7 +9,7 @@ _Menu(root):
 _Menu(logout):
     name: logout
     url: /logout
-    tags:
+    labels:
        - _global
 
 _Menu(doc):
@@ -17,7 +17,7 @@ _Menu(doc):
     url: /doc
     title: play documentation
     parent: root
-    tags: 
+    labels: 
        - play
        - doc
        - french
@@ -27,7 +27,7 @@ _Menu(com):
     url: /community?group=play
     title: play community
     parent: root
-    tags: 
+    labels: 
        - play
        - com
     
@@ -35,7 +35,7 @@ _Menu(code):
     name: code
     url: /code
     parent: root
-    tags: 
+    labels: 
        - play
        - code
     
@@ -43,7 +43,7 @@ _Menu(module):
     name: modules
     url: /modules
     parent: root
-    tags:
+    labels:
        - play
        - module
        - french
@@ -52,7 +52,7 @@ _Menu(akka):
     name: akka support
     url: /modules/akka
     parent: module
-    tags:
+    labels:
        - play
        - module
        - akka
@@ -61,7 +61,7 @@ _Menu(bespin):
     name: Bespin online editor
     url: /modules/bespin
     parent: module
-    tags:
+    labels:
        - play
        - module
        - bespin

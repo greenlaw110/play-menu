@@ -11,6 +11,8 @@ public interface IMenu {
      * @throws NullPointerException if name is null
      */
     void setName(String name);
+    String getCssClass();
+    void setCssClass(String cssClass);
     String getUrl();
     void setUrl(String url);
     String getTitle();
@@ -19,15 +21,15 @@ public interface IMenu {
     String getContext();
     @Deprecated
     void setContext(String context);
-    boolean taggedBy(String tag);
-    void setTags(Set<String> tags);
+    boolean hasLabel(String label);
+    void setLabels(Set<String> labels);
     IMenu getParentMenu();
     List<IMenu> getSubMenus();
     @Deprecated
     List<IMenu> getSubMenusByContext(String context);
-    List<IMenu> getSubMenusByTag(String tag);
+    List<IMenu> getSubMenusByLabel(String label);
     List<IMenu> getTopLevelMenus();
     @Deprecated
     List<IMenu> getTopLevelMenusByContext(String context);
-    List<IMenu> getTopLevelMenusByTag(String tag);
+    List<IMenu> getTopLevelMenusByLabel(String label);
 }

@@ -67,9 +67,10 @@ public class MenuTest extends UnitTest {
         List<IMenu> l0 = doc.getSubMenus();
         assertTrue(l0.isEmpty());
         
-        assertTrue(play.taggedBy("play"));
-        assertSame(play.getTopLevelMenusByTag("play").size(), 2);
-        assertSame(2, module.getSubMenusByTag("module").size());
+        assertTrue(play.hasLabel("play"));
+        assertSame(1, play.getTopLevelMenusByLabel("play").size());
+        assertSame(1, play.getTopLevelMenusByLabel("_global").size());
+        assertSame(2, module.getSubMenusByLabel("module").size());
         
     }
     
@@ -94,8 +95,8 @@ public class MenuTest extends UnitTest {
         List<IMenu> l0 = doc.getSubMenus();
         assertTrue(l0.isEmpty());
 
-        assertTrue(play.taggedBy("play"));
-        assertSame(play.getTopLevelMenusByTag("play").size(), 2);
-        assertSame(2, module.getSubMenusByTag("module").size());
+        assertTrue(play.hasLabel("play"));
+        assertSame(play.getTopLevelMenusByLabel("play").size(), 2);
+        assertSame(2, module.getSubMenusByLabel("module").size());
     }
 }

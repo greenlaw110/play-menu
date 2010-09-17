@@ -29,24 +29,26 @@ public class _Menu extends Model implements IMenu {
     
     @Column(unique=true)
     public String name;
+    public String cssClass;
     public String url;
     public String title;
     public String context;
     @Transient
-    public Set<String> tags;
-    private String tagStr_;
+    public Set<String> labels;
+    private String labelStr_;
     @PrePersist
-    private void saveTags_() {
-        Logger.debug("saving tags ...");
-        if (null == tags) {
+    private void setLabels_() {
+        Logger.debug("saving labels ...");
+        if (null == labels) {
             return;
         }
-        tagStr_ = Utils.join(tags, ",");
+        labelStr_ = Utils.join(labels, ",");
     }
     @PostLoad
-    private void loadTags_() {
-        Logger.debug("loading tags ...");
-        tags = new HashSet(Arrays.asList(tagStr_.split(",")));
+    private void loadLabels_() {
+        Logger.debug("loading labels ...");
+        if (labelStr_ == null) labelStr_ = "";
+        labels = new HashSet(Arrays.asList(labelStr_.split(",")));
     }
     
     @ManyToOne
@@ -54,6 +56,11 @@ public class _Menu extends Model implements IMenu {
     
     @OneToMany(mappedBy="parent", cascade=CascadeType.PERSIST, fetch=FetchType.EAGER)
     public List<_Menu> children;
+    
+    @Override
+    public String toString() {
+        return name;
+    }
     
     public static _Menu findByName(String name) {
         return find("byName", name).first();
@@ -68,6 +75,15 @@ public class _Menu extends Model implements IMenu {
     public void setName(String name) {
         if (null == name) throw new NullPointerException();
         this.name = name;
+    }
+    
+    public String getCssClass() {
+        return cssClass;
+    }
+    
+    @Override
+    public void setCssClass(String cssClass) {
+        this.cssClass = cssClass;
     }
     
     @Override
@@ -101,13 +117,13 @@ public class _Menu extends Model implements IMenu {
     }
     
     @Override
-    public boolean taggedBy(String tag) {
-        return tags.contains(tag);
+    public boolean hasLabel(String label) {
+        return labels.contains(label);
     }
     
-    public void setTags(Set<String> tags) {
-        if (null == tags) return;
-        this.tags = new HashSet(tags);
+    public void setLabels(Set<String> label) {
+        if (null == label) return;
+        this.labels = new HashSet(label);
     }
     
     @Override
@@ -132,10 +148,10 @@ public class _Menu extends Model implements IMenu {
         return l;
     }
     
-    public List<IMenu> getSubMenusByTag(String tag) {
+    public List<IMenu> getSubMenusByLabel(String label) {
         List<IMenu> l = new ArrayList();
         for (IMenu m: children) {
-            if (m.taggedBy(tag)) {
+            if (m.hasLabel(label)) {
                 l.add(m);
             }
         }
@@ -153,11 +169,11 @@ public class _Menu extends Model implements IMenu {
     }
     
     @Override
-    public List<IMenu> getTopLevelMenusByTag(String tag) {
+    public List<IMenu> getTopLevelMenusByLabel(String label) {
         List<IMenu> l0 = getTopLevelMenus();
         List<IMenu> l = new ArrayList();
         for (IMenu m: l0) {
-            if (m.taggedBy(tag)) {
+            if (m.hasLabel(label)) {
                 l.add(m);
             }
         }

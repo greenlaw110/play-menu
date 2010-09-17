@@ -69,13 +69,11 @@ public class MenuPlugin extends PlayPlugin {
         _Menu m = new _Menu();
         String ctx = Session.current().get("_menu.context");
         binding.put("_menu_context", ctx);
-        String tag = Session.current().get("_menu_tag");
-        binding.put("_menu_tag", tag);
-        if (ctx != null) {
-            topMenuList = m.getTopLevelMenusByContext(ctx);
-        } else {
-            topMenuList = m.getTopLevelMenus();
-        }
+        String label = Session.current().get("_menu_label");
+        binding.put("_menu_label", label);
+        // always get all top level menus
+        // let tag lib to process based on label/context setting
+        topMenuList = m.getTopLevelMenus();
         
         binding.put("_menu_top_list", topMenuList);   
     }
