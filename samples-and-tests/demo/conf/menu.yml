@@ -2,38 +2,68 @@
 Menu(root2):
     name: play
     url: /custom
+    tags:
+       - play
+       - root
+
+Menu(logout2):
+    name: logout
+    url: /logout
+    tags:
+       - play
+       - logout
     
 Menu(doc2):
     name: learn
     url: /custom/doc
     title: play documentation
     parent: root2
+    tags:
+       - play
+       - doc
     
 Menu(com2):
     name: community
     url: /custom/community?group=play&module=menu
     title: play community
     parent: root2
+    tags:
+       - play
+       - com
     
 Menu(code2):
     name: code
     url: /custom/code
     parent: root2
+    tags:
+       - play
+       - code
     
 Menu(module2):
     name: modules
     url: /custom/modules
     parent: root2
+    tags:
+       - play
+       - module
     
 Menu(akka2):
     name: akka support
     url: /custom/modules/akka
     parent: module2
+    tags:
+       - play
+       - module
+       - akka
     
 Menu(bespin2):
     name: Bespin online editor
     url: /custom/modules/bespin
     parent: module2
+    tags:
+       - play
+       - module
+       - bespin
 
     
 

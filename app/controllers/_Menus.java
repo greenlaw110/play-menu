@@ -21,7 +21,9 @@ public class _Menus extends Controller {
         binding.put("_menu_current", request.url);
         Menu m = models.Menu.class.newInstance();
         String ctx = Session.current().get("_menu.context");
-        binding.put("_menu_context", ctx);
+        if (null != ctx) binding.put("_menu_context", ctx);
+        String tag = Session.current().get("_menu.tag");
+        if (null != tag) binding.put("_menu_tag", tag);
         Object topMenuList = ctx == null ? m.getTopLevelMenus() : m.getTopLevelMenusByContext(ctx);
         binding.put("_menu_top_list", topMenuList);
     }

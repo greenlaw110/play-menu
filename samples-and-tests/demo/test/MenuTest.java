@@ -5,12 +5,46 @@ import models.IMenu;
 import models.Menu;
 import models._Menu;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import play.Logger;
+import play.db.Model;
+import play.modules.morphia.utils.MorphiaFixtures;
+import play.test.Fixtures;
 import play.test.UnitTest;
 
 public class MenuTest extends UnitTest {
-
+    
+    @Before
+    public void prepareData() {
+        /*
+         * _Menu delete is a little bit complicated. You can't do
+         * 1. Fixtures.deleteAll(): b/c _Menu is not managed by Play b/c it's not an app model
+         * 2. _Menu.deleteAll(): b/c Integrity constraint violation due to parent/children relationship
+        _Menu root = new _Menu();
+        List<IMenu> ml = root.getTopLevelMenus();
+        for (IMenu m: ml) {
+            deleteMenu((_Menu)m);
+        }
+        
+        Fixtures.load("_menu.yml");
+         */
+        MorphiaFixtures.deleteAll();
+        Fixtures.load("menu.yml");
+    }
+    
+    private void deleteMenu(_Menu m) {
+        List<IMenu> ml = m.getSubMenus();
+        for (IMenu sm: ml) {
+            deleteMenu((_Menu)sm);
+        }
+        try {
+            m.delete();
+        } catch (Exception e) {
+            Logger.error(e, "error delete menu: %1$s", m.getName());
+        }
+    }
     
     @Test
     public void testDefaultMenuImpl() {
@@ -26,12 +60,17 @@ public class MenuTest extends UnitTest {
         assertTrue(module.getParentMenu().equals(play));
         
         List<_Menu> l = _Menu.find("parent is null").fetch();
-        assertTrue(l.size() == 1);
+        assertTrue(l.size() == 2);
         assertTrue(l.contains(play));
         
         IMenu doc = _Menu.findByName("learn");
         List<IMenu> l0 = doc.getSubMenus();
         assertTrue(l0.isEmpty());
+        
+        assertTrue(play.taggedBy("play"));
+        assertSame(play.getTopLevelMenusByTag("play").size(), 2);
+        assertSame(2, module.getSubMenusByTag("module").size());
+        
     }
     
     @Test
@@ -48,11 +87,15 @@ public class MenuTest extends UnitTest {
         assertTrue(module.getParentMenu().equals(play));
         
         List<_Menu> l = Menu.filter("parent", null).asList();
-        assertSame(l.size(), 1);
+        assertSame(l.size(), 2);
         assertTrue(l.contains(play));
         
         IMenu doc = Menu.findByName("learn");
         List<IMenu> l0 = doc.getSubMenus();
         assertTrue(l0.isEmpty());
+
+        assertTrue(play.taggedBy("play"));
+        assertSame(play.getTopLevelMenusByTag("play").size(), 2);
+        assertSame(2, module.getSubMenusByTag("module").size());
     }
 }

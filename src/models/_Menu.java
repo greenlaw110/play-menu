@@ -1,7 +1,10 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,15 +12,16 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Index;
+import javax.persistence.Transient;
 
 import play.Logger;
 import play.db.jpa.JPABase;
 import play.db.jpa.Model;
-import play.db.jpa.GenericModel.JPAQuery;
 import play.mvc.Scope.Params;
+import play.utils.Utils;
 
 @Entity
 @Table(name="_menu")
@@ -28,6 +32,22 @@ public class _Menu extends Model implements IMenu {
     public String url;
     public String title;
     public String context;
+    @Transient
+    public Set<String> tags;
+    private String tagStr_;
+    @PrePersist
+    private void saveTags_() {
+        Logger.debug("saving tags ...");
+        if (null == tags) {
+            return;
+        }
+        tagStr_ = Utils.join(tags, ",");
+    }
+    @PostLoad
+    private void loadTags_() {
+        Logger.debug("loading tags ...");
+        tags = new HashSet(Arrays.asList(tagStr_.split(",")));
+    }
     
     @ManyToOne
     public _Menu parent;
@@ -45,8 +65,19 @@ public class _Menu extends Model implements IMenu {
     }
     
     @Override
+    public void setName(String name) {
+        if (null == name) throw new NullPointerException();
+        this.name = name;
+    }
+    
+    @Override
     public String getTitle() {
         return title;
+    }
+    
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
     }
     
     @Override
@@ -55,8 +86,28 @@ public class _Menu extends Model implements IMenu {
     }
     
     @Override
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    
+    @Override
     public String getContext() {
         return context;
+    }
+    
+    @Override
+    public void setContext(String context) {
+        this.context = context;
+    }
+    
+    @Override
+    public boolean taggedBy(String tag) {
+        return tags.contains(tag);
+    }
+    
+    public void setTags(Set<String> tags) {
+        if (null == tags) return;
+        this.tags = new HashSet(tags);
     }
     
     @Override
@@ -81,6 +132,16 @@ public class _Menu extends Model implements IMenu {
         return l;
     }
     
+    public List<IMenu> getSubMenusByTag(String tag) {
+        List<IMenu> l = new ArrayList();
+        for (IMenu m: children) {
+            if (m.taggedBy(tag)) {
+                l.add(m);
+            }
+        }
+        return l;
+    }
+    
     @Override
     public List<IMenu> getTopLevelMenus() {
         return _Menu.find("parent is null").fetch();
@@ -89,6 +150,18 @@ public class _Menu extends Model implements IMenu {
     @Override
     public List<IMenu> getTopLevelMenusByContext(String context) {
         return _Menu.find("parent is null and context = ?", context).fetch();
+    }
+    
+    @Override
+    public List<IMenu> getTopLevelMenusByTag(String tag) {
+        List<IMenu> l0 = getTopLevelMenus();
+        List<IMenu> l = new ArrayList();
+        for (IMenu m: l0) {
+            if (m.taggedBy(tag)) {
+                l.add(m);
+            }
+        }
+        return l;
     }
     
     public static <T extends JPABase> T create(String name, Params params) {

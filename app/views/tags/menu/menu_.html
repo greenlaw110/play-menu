@@ -1,25 +1,30 @@
 <ul class="_menu_list">
 #{list items: _menu_top_list, as: 'mi'}
-#{if _menu_context == null || _menu_context.equalsIgnoreCase(mi.context)}
-%{
-def url = mi.url?.split('\\?')[0]
-def isCur = url.endsWith(_menu_current?.split('\\?')[0])
-def cls=isCur?"_menu_current":"";
-cls+=mi.subMenus.size()>0?" _menu_expanded":""
-def clsStr=cls==""?"":"class='"+cls+"'"
-}%
-<li ${clsStr}>
-#{if mi.url != null && !isCur}
-<a href="${mi.url}" #{if mi.title != null}title="${messages.get(mi.title)}"#{/if}>
-#{/if}
-<span>${messages.get(mi.name)}</span>
-#{if mi.url != null}
-</a>
-#{/if}
-#{if mi.subMenus.size() > 0}
-#{menu.menu_ menu_top_list:mi.subMenus, menu_current: _menu_current, menu_context: _menu_context/}
-#{/if}
-</li>
-#{/if}
+	%{
+		def showByContext = _menu_context == null || _menu_context.equalsIgnoreCase(mi.context)
+		def showByTag = _menu_tag == null || mi.taggedBy(_menu_tag)
+		def showMenu = showByContext && showByTag
+	}%
+	#{if showMenu}
+		%{
+		def url = mi.url?.split('\\?')[0]
+		def isCur = url.endsWith(_menu_current?.split('\\?')[0])
+		def cls=isCur?"_menu_current":"";
+		cls+=mi.subMenus.size()>0?" _menu_expanded":""
+		def clsStr=cls==""?"":"class='"+cls+"'"
+		}%
+		<li ${clsStr}>
+			#{if mi.url != null && !isCur}
+				<a href="${mi.url}" #{if mi.title != null}title="${messages.get(mi.title)}"#{/if}>
+			#{/if}
+			<span>${messages.get(mi.name)}</span>
+			#{if mi.url != null && !isCur}
+				</a>
+			#{/if}
+			#{if mi.subMenus.size() > 0}
+				#{menu.menu_ menu_top_list:mi.subMenus, menu_current: _menu_current, menu_context: _menu_context, menu_tag: _menu_tag/}
+			#{/if}
+		</li>
+	#{/if}
 #{/list}
 </ul>

@@ -12,6 +12,7 @@ h2. <a>features</a>
 * Provide easy to use menu tag to insert navigation menu to your web page
 * Support current menu
 * Support hierarchical structure
+* Support menu tag (not play template tag) to group your menus
 
 h2. TODO List
 
@@ -39,43 +40,66 @@ bc.. # Sample _menu.yml
 _Menu(play):
     name: play
     url: /
+    tags
+        - play
     
 _Menu(doc):
     name: learn
     url: /doc
     title: play documentation
     parent: play
+    tags
+        - play
+        - doc
     
 _Menu(com):
     name: community
     url: /community
     title: play community
     parent: play
+    tags:
+        - play
+        - community
     
 _Menu(code):
     name: code
     url: /code
     parent: play
+    tags:
+        - play
+        - code
     
 _Menu(module):
     name: modules
     url: /modules
     parent: play
+    tags:
+        - play
+        - module
     
 _Menu(akka):
     name: akka support
     url: /modules/akka
     parent: module
+    tags:
+        - play
+        - module
     
 _Menu(bespin):
     name: Bespin online editor
     url: /modules/bespin
     parent: module
+    tags:
+        - play
+        - module
     
 _Menu(user):
     name: Manage user
     url: /admin/users
-    context: admin
+    context: admin # context is deprecated, use tags instead
+    tags:
+        - play
+        - admin
 
 p. As you can find in the above sample _menu.yml file, each menu item can have five enties:
 * name
@@ -103,12 +127,27 @@ p. It's possible that you will not be able to use the default Menu impl. One obv
 
 h3. <a>Define Context</a>
 
+p. Context is deprecated, use Tags instead
 p. Normally you won't touch renderArgs because the module is smart enough to determine your top menus and the current menu being selected. One common case you need to touch with the renderArgs is to define your context, for example, in the base controller of your administration controllers, you will probably have the following codes:
 
 bc.. @Before
 static void setMenuContext() {
-    session.put("_menu.context", "admin");
+    renderArgs.put("_menu_context", "admin");
 }
+
+h3. <a>Use tags to group menu</a>
+
+p. First you need to assign tags to menu items in your menu definition file "_menu.yml" if you use default implementation. Then you can define require menu.menu tag to display menus which are associated with specific tag. You can do it in two ways:
+
+bc.. /* apply tags method 1: use controller to set the tag */
+@Before
+static void setMenuTag() {
+    renderArgs.put("_menu_tag", "play");
+}
+
+/* apply tags method 2: assign tag in your template file */
+<div id="admin-menu">#{menu.menu menu_tag: 'admin' /}</div>
+<div id="user-menu">#{menu.menu menu_tag: 'user' /></div>
 
 h3. <a>Other RenderArgs</a>
 
@@ -118,9 +157,9 @@ h3. <a>Other RenderArgs</a>
 
 h2. <a>FAQ</a>
 
-h3. Why do I get the compilation error says that models.Menu class not found when I start my play app?
+h3. Why do I get "models.Menu cannot be resolved" error when I start my play app?
 
-p. You have not defined your own Menu model, just remove the {play.path}/modules/menu-xx/app/controllers/_Menus.java file.
+p. You have not defined your own Menu model, please remove the {play.path}/modules/menu-xx/app/controllers/_Menus.java file.
 
 h3. How to customize look&feel of the navigation menu rendered in my web page?
 

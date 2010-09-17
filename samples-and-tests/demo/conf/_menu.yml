@@ -1,35 +1,69 @@
 _Menu(root):
     name: play
     url: /
-    
+    tags: 
+       - play
+       - root
+       - french
+
+_Menu(logout):
+    name: logout
+    url: /logout
+    tags:
+       - play
+       - logout
+
 _Menu(doc):
     name: learn
     url: /doc
     title: play documentation
     parent: root
+    tags: 
+       - play
+       - doc
+       - french
     
 _Menu(com):
     name: community
     url: /community?group=play
     title: play community
     parent: root
+    tags: 
+       - play
+       - com
     
 _Menu(code):
     name: code
     url: /code
     parent: root
+    tags: 
+       - play
+       - code
     
 _Menu(module):
     name: modules
     url: /modules
     parent: root
+    tags:
+       - play
+       - module
+       - french
     
 _Menu(akka):
     name: akka support
     url: /modules/akka
     parent: module
+    tags:
+       - play
+       - module
+       - akka
     
 _Menu(bespin):
     name: Bespin online editor
     url: /modules/bespin
     parent: module
+    tags:
+       - play
+       - module
+       - bespin
+    

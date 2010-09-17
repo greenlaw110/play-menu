@@ -3,7 +3,15 @@
     while (caller._caller) caller = caller._caller
     
     def _menu_top_list = caller._menu_top_list
-    def _menu_current = caller._menu_current
+    _menu_current = _menu_current?:caller._menu_current
+    _menu_context = _menu_context?:caller._menu_context
+    _menu_tag = _menu_tag?:caller._menu_tag
 }%
 
-#{menu.menu_ menu_top_list:_menu_top_list, menu_current:_menu_current, menu_context: _menu_context/}
+#{menu.menu_ menu_top_list:_menu_top_list, menu_current: _menu_current, menu_context: _menu_context, menu_tag: _menu_tag /}
+
+#{if _menu_debug}
+current: ${_menu_current?:caller._menu_current} <br/>
+context: ${_menu_context?:caller._menu_context} <br/>
+tag: ${_menu_tag?:caller._menu_tag} <br/>
+#{/if}

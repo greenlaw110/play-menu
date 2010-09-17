@@ -1,9 +1,16 @@
 package controllers;
 
+
+import play.mvc.Before;
 import play.mvc.Controller;
-import play.mvc.With;
 
 public class DefaultMenu extends Controller {
+    
+    @Before
+    public static void setTag() {
+        //renderArgs.put("_menu_tag", "french");
+    }
+    
     public static void index() {
         render();
     }
@@ -21,9 +28,12 @@ public class DefaultMenu extends Controller {
     }
     
     public static void modules(String id) {
+        /*
         if (null != id) {
             renderArgs.put("_menu_current", id);
         }
         render(id);
+        */
+        render();
     }
 }
