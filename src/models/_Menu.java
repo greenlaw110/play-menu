@@ -19,15 +19,17 @@ import javax.persistence.Transient;
 
 import play.Logger;
 import play.db.jpa.JPABase;
+import play.db.jpa.JPAPlugin;
 import play.db.jpa.Model;
 import play.mvc.Scope.Params;
+import play.test.Fixtures;
 import play.utils.Utils;
 
 @Entity
-@Table(name="_menu")
+@Table(name = "_menu")
 public class _Menu extends Model implements IMenu {
-    
-    @Column(unique=true)
+
+    @Column(unique = true)
     public String name;
     public String cssClass;
     public String url;
@@ -36,6 +38,8 @@ public class _Menu extends Model implements IMenu {
     @Transient
     public Set<String> labels;
     private String labelStr_;
+
+    @SuppressWarnings("unused")
     @PrePersist
     private void setLabels_() {
         Logger.debug("saving labels ...");
@@ -44,145 +48,151 @@ public class _Menu extends Model implements IMenu {
         }
         labelStr_ = Utils.join(labels, ",");
     }
+
+    @SuppressWarnings("unused")
     @PostLoad
     private void loadLabels_() {
         Logger.debug("loading labels ...");
-        if (labelStr_ == null) labelStr_ = "";
+        if (labelStr_ == null)
+            labelStr_ = "";
         labels = new HashSet(Arrays.asList(labelStr_.split(",")));
     }
-    
+
     @ManyToOne
     public _Menu parent;
-    
-    @OneToMany(mappedBy="parent", cascade=CascadeType.PERSIST, fetch=FetchType.EAGER)
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     public List<_Menu> children;
-    
+
     @Override
     public String toString() {
         return name;
     }
-    
+
     public static _Menu findByName(String name) {
         return find("byName", name).first();
     }
-    
+
     @Override
     public String getName() {
         return name;
     }
-    
+
     @Override
     public void setName(String name) {
-        if (null == name) throw new NullPointerException();
+        if (null == name)
+            throw new NullPointerException();
         this.name = name;
     }
-    
+
     public String getCssClass() {
         return cssClass;
     }
-    
+
     @Override
     public void setCssClass(String cssClass) {
         this.cssClass = cssClass;
     }
-    
+
     @Override
     public String getTitle() {
         return title;
     }
-    
+
     @Override
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     @Override
     public String getUrl() {
         return url;
     }
-    
+
     @Override
     public void setUrl(String url) {
         this.url = url;
     }
-    
+
     @Override
     public String getContext() {
         return context;
     }
-    
+
     @Override
     public void setContext(String context) {
         this.context = context;
     }
-    
+
     @Override
     public boolean hasLabel(String label) {
         return labels.contains(label);
     }
-    
+
     public void setLabels(Set<String> label) {
-        if (null == label) return;
+        if (null == label)
+            return;
         this.labels = new HashSet(label);
     }
-    
+
     @Override
     public IMenu getParentMenu() {
         return parent;
     }
-    
+
     @Override
     public List<IMenu> getSubMenus() {
         List<IMenu> l = new ArrayList(children);
         return l;
     }
-    
+
+    @SuppressWarnings("deprecation")
     @Override
     public List<IMenu> getSubMenusByContext(String context) {
         List<IMenu> l = new ArrayList();
-        for (IMenu m: children) {
+        for (IMenu m : children) {
             if (context.equalsIgnoreCase(m.getContext())) {
                 l.add(m);
             }
         }
         return l;
     }
-    
+
     public List<IMenu> getSubMenusByLabel(String label) {
         List<IMenu> l = new ArrayList();
-        for (IMenu m: children) {
+        for (IMenu m : children) {
             if (m.hasLabel(label)) {
                 l.add(m);
             }
         }
         return l;
     }
-    
+
     @Override
     public List<IMenu> getTopLevelMenus() {
         return _Menu.find("parent is null").fetch();
     }
-    
+
     @Override
     public List<IMenu> getTopLevelMenusByContext(String context) {
         return _Menu.find("parent is null and context = ?", context).fetch();
     }
-    
+
     @Override
     public List<IMenu> getTopLevelMenusByLabel(String label) {
         List<IMenu> l0 = getTopLevelMenus();
         List<IMenu> l = new ArrayList();
-        for (IMenu m: l0) {
+        for (IMenu m : l0) {
             if (m.hasLabel(label)) {
                 l.add(m);
             }
         }
         return l;
     }
-    
+
     public static <T extends JPABase> T create(String name, Params params) {
         try {
-            return (T)play.db.jpa.JPQL.instance.create("_Menu", name, params);
+            return (T) play.db.jpa.JPQL.instance.create("_Menu", name, params);
         } catch (Exception e) {
             throw new RuntimeException(e.getCause());
         }
@@ -190,6 +200,7 @@ public class _Menu extends Model implements IMenu {
 
     /**
      * Count entities
+     * 
      * @return number of entities of this class
      */
     public static long count() {
@@ -197,10 +208,13 @@ public class _Menu extends Model implements IMenu {
     }
 
     /**
-     * Count entities with a special query.
-     * Example : Long moderatedPosts = Post.count("moderated", true);
-     * @param query HQL query or shortcut
-     * @param params Params to bind to the query
+     * Count entities with a special query. Example : Long moderatedPosts =
+     * Post.count("moderated", true);
+     * 
+     * @param query
+     *            HQL query or shortcut
+     * @param params
+     *            Params to bind to the query
      * @return A long
      */
     public static long count(String query, Object... params) {
@@ -216,13 +230,15 @@ public class _Menu extends Model implements IMenu {
 
     /**
      * Find the entity with the corresponding id.
-     * @param id The entity id
+     * 
+     * @param id
+     *            The entity id
      * @return The entity
-     * @throws Exception 
+     * @throws Exception
      */
     public static <T extends JPABase> T findById(Object id) {
         try {
-            return (T)play.db.jpa.JPQL.instance.findById("_Menu", id);
+            return (T) play.db.jpa.JPQL.instance.findById("_Menu", id);
         } catch (Exception e) {
             Logger.warn(e, "Error findById(%1$s) for entity class: ", id, "_Menu");
             return null;
@@ -231,8 +247,11 @@ public class _Menu extends Model implements IMenu {
 
     /**
      * Prepare a query to find entities.
-     * @param query HQL query or shortcut
-     * @param params Params to bind to the query
+     * 
+     * @param query
+     *            HQL query or shortcut
+     * @param params
+     *            Params to bind to the query
      * @return A JPAQuery
      */
     public static JPAQuery find(String query, Object... params) {
@@ -241,6 +260,7 @@ public class _Menu extends Model implements IMenu {
 
     /**
      * Prepare a query to find *all* entities.
+     * 
      * @return A JPAQuery
      */
     public static JPAQuery all() {
@@ -249,8 +269,11 @@ public class _Menu extends Model implements IMenu {
 
     /**
      * Batch delete of entities
-     * @param query HQL query or shortcut
-     * @param params Params to bind to the query
+     * 
+     * @param query
+     *            HQL query or shortcut
+     * @param params
+     *            Params to bind to the query
      * @return Number of entities deleted
      */
     public static int delete(String query, Object... params) {
@@ -259,10 +282,27 @@ public class _Menu extends Model implements IMenu {
 
     /**
      * Delete all entities
+     * 
      * @return Number of entities deleted
      */
     public static int deleteAll() {
         return play.db.jpa.JPQL.instance.deleteAll("_Menu");
+    }
+
+    @Override
+    public void loadMenu() {
+        try {
+            JPAPlugin.startTx(false);
+            if (_Menu.count() == 0) {
+                Logger.info("loading menu conf...");
+                Fixtures.load("_menu.yml");
+                Logger.info("Menu loaded");
+            }
+        } catch (Exception e) {
+            Logger.warn(e, "error loading menu from _menu.yml");
+        } finally {
+            JPAPlugin.closeTx(false);
+        }
     }
 
 }

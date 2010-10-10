@@ -32,4 +32,11 @@ public interface IMenu {
     @Deprecated
     List<IMenu> getTopLevelMenusByContext(String context);
     List<IMenu> getTopLevelMenusByLabel(String label);
+    
+    /**
+     * Implementation should use this method to load menu definition file 
+     * 
+     * Implementation should NOT throw exception from this method
+     */
+    void loadMenu();
 }
