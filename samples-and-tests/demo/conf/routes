@@ -2,19 +2,18 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET /		DefaultMenu.index
-GET /doc	DefaultMenu.doc
-GET /community DefaultMenu.community
-GET /code	DefaultMenu.code
-GET /modules DefaultMenu.modules
-GET /modules/{id} DefaultMenu.modules
-
-GET /custom		CustomMenu.index
-GET /custom/doc	CustomMenu.doc
-GET /custom/community CustomMenu.community
-GET /custom/code	CustomMenu.code
-GET /custom/modules CustomMenu.modules
-GET /custom/modules/{id} CustomMenu.modules
+GET /		Application.index
+GET /doc	Application.doc
+GET /community Application.community
+GET /code	Application.code
+GET /modules Application.modules
+GET /modules/{id} Application.modules
+POST /menuClass Application.setMenuClass
+GET /sql Application.sql
+GET /non-sql Application.nonSql
+GET /mysql application.mysql
+GET /postgres Application.postgres
+GET /mongodb Application.mongodb
 
 # Import Menu routes
 *       /menu                                       module:menu

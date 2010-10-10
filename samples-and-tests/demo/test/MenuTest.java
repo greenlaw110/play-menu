@@ -2,7 +2,7 @@
 import java.util.List;
 
 import models.IMenu;
-import models.Menu;
+import models.MongoMenu;
 import models._Menu;
 
 import org.junit.Before;
@@ -76,22 +76,22 @@ public class MenuTest extends UnitTest {
     
     @Test
     public void testCustomMenuImpl() {
-        IMenu play = Menu.findByName("play");
+        IMenu play = MongoMenu.findByName("play");
         assertNotNull(play);
         
         assertSame(play.getSubMenus().size(), 4);
        
-        IMenu module = Menu.findByName("modules");
+        IMenu module = MongoMenu.findByName("modules");
         assertTrue(module.getName().equals("modules"));
         
         assertSame(module.getSubMenus().size(), 2);
         assertTrue(module.getParentMenu().equals(play));
         
-        List<_Menu> l = Menu.filter("parent", null).asList();
+        List<_Menu> l = MongoMenu.filter("parent", null).asList();
         assertSame(l.size(), 2);
         assertTrue(l.contains(play));
         
-        IMenu doc = Menu.findByName("learn");
+        IMenu doc = MongoMenu.findByName("learn");
         List<IMenu> l0 = doc.getSubMenus();
         assertTrue(l0.isEmpty());
 
