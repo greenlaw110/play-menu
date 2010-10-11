@@ -67,7 +67,7 @@ public class MenuPlugin extends PlayPlugin {
     }
     
     @Override
-    public void onApplicationReady() {
+    public void afterApplicationStart() {
         init_();
     }
     
