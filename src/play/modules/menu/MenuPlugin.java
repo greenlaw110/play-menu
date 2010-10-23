@@ -96,7 +96,7 @@ public class MenuPlugin extends PlayPlugin {
     }
     
     private static Pattern p2_ = null; {
-        p2_ = Pattern.compile("@\\{(.*)\\}");
+        p2_ = Pattern.compile("@\\{([\\w\\.]*).*\\}");
     }
     
     public static String url(IMenu menu) {

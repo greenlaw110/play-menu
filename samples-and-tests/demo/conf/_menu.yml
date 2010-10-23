@@ -1,6 +1,6 @@
 _Menu(root):
     name: play
-    url: '@{Demo.index}'
+    url: '@{Demo.index()}'
     labels: 
        - play
        - root
@@ -14,7 +14,7 @@ _Menu(logout):
 
 _Menu(doc):
     name: learn
-    url: '@{Demo.doc}'
+    url: '@{Demo.doc()}'
     title: play documentation
     parent: root
     labels: 
