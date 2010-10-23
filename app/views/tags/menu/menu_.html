@@ -5,6 +5,7 @@
 		def showBylabel = _menu_label == null || mi.hasLabel(_menu_label)
 		def showGlobal = !_menu_no_global && mi.hasLabel('_global')
 		def showMenu = showGlobal || showByContext && showBylabel
+		def url = play.modules.menu.MenuPlugin.url(mi)
 	}%
 	#{if _menu_debug}
 		<br/>
@@ -19,7 +20,7 @@
 	#{/if}
 	#{if showMenu}
 		%{
-		def url = mi.url?.split('\\?')[0]
+		url = url?.split('\\?')[0]
 		def cls = mi.cssClass ? mi.cssClass + " " : ""
 		def isCur = url.endsWith(_menu_current?.split('\\?')[0])
 		cls+=isCur?"_menu_current":"";
@@ -27,11 +28,11 @@
 		def clsStr = "class='"+cls+"'"
 		}%
 		<li ${clsStr}>
-			#{if mi.url != null && !isCur}
-				<a href="${mi.url}" #{if mi.title != null}title="${messages.get(mi.title)}"#{/if}>
+			#{if url != null && !isCur}
+				<a href="${url}" #{if mi.title != null}title="${messages.get(mi.title)}"#{/if}>
 			#{/if}
 			<span>${messages.get(mi.name)}</span>
-			#{if mi.url != null && !isCur}
+			#{if url != null && !isCur}
 				</a>
 			#{/if}
 			#{if mi.subMenus.size() > 0}

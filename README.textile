@@ -1,6 +1,10 @@
 h1. Playframework Menu module
 
+h2. <a>What's New in v1.0c
+* Support reverse url mapping
+
 The Menu module is developed to enable Playframework application developer to quickly implement web navigation menu
+<script type="text/javascript" src="http://www.ohloh.net/p/485872/widgets/project_users_logo.js"></script>
 
 h2. <a>Motivation</a>
 
@@ -109,6 +113,8 @@ p. As you can find in the above sample _menu.yml file, each menu item can have f
 * title (optional)
 * context (optional, could be used to partition your navigation menu depends on the context, e.g. admin)
 * parent (optional, if no parent specified, then this entry is the top level menu)
+
+p. Start from v1.0c, you can use reverse URL mapping in menu yml file, e.g. <samp>url: '@{Application.index}' </samp> will map to '/'. Note, you must use quotation mark "'" to use the reverse URL mapping style.
 
 h3. <a>Use menu tag in your template</a>
 

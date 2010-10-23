@@ -18,25 +18,15 @@
 <div id="wrap">
 	<div id="main" class="container">
 		<div class="span-24 last header">
-			<h1>Play Menu Plugin Demo - Menu Class: ${menuClass}</h1>
+			<h1>Play Menu Plugin Demo - #{get 'subTitle' /}</h1>
 			<hr/>
 		</div>
 		
-		<div class="span-5">
+		<div class="span-5 navigation-panel">
 			#{menu.menu /}
 		</div>
 		
 		<div class="span-18 main">
-	        #{if flash.success}
-	            <div class="success">
-	                ${flash.success}
-	            </div>
-	        #{/if}
-	        #{if flash.error || error}
-	            <div class="error">
-	                ${error ?: flash.error}
-	            </div>
-	        #{/if}
 			#{doLayout /}
 		</div>
 	</div>

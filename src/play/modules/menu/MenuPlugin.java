@@ -2,6 +2,8 @@ package play.modules.menu;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jdt.internal.core.SetClasspathOperation;
 
@@ -11,7 +13,9 @@ import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.db.jpa.JPAPlugin;
+import play.exceptions.UnexpectedException;
 import play.mvc.Http.Request;
+import play.mvc.Router;
 import play.mvc.Scope;
 import play.mvc.Scope.Params;
 import play.mvc.Scope.RenderArgs;
@@ -85,6 +89,31 @@ public class MenuPlugin extends PlayPlugin {
         String val = Params.current().get(name);
         if (null == val) val = Session.current().get(name);
         if (null != val) RenderArgs.current().put(name, val);
+    }
+    
+    private static Pattern p1_ = null; {
+        p1_ = Pattern.compile("'(.*)'");
+    }
+    
+    private static Pattern p2_ = null; {
+        p2_ = Pattern.compile("@\\{(.*)\\}");
+    }
+    
+    public static String url(IMenu menu) {
+        String s = menu.getUrl();
+        if (null == s) return null;
+        s = s.trim();
+        Matcher m = p1_.matcher(s);
+        if (m.find()) {
+            s = m.group(1);
+        }
+        m = p2_.matcher(s);
+        if (m.find()) {
+            s = m.group(1);
+            return Router.reverse(s).url;
+        } else {
+            return s;
+        }
     }
 
 }
