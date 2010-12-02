@@ -1,0 +1,29 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET /		Application.index
+GET /doc	Application.doc
+GET /community Application.community
+GET /code	Application.code
+GET /modules Application.modules
+GET /modules/{id} Application.modules
+POST /menuClass Application.setMenuClass
+GET /sql Application.sql
+GET /non-sql Application.nonSql
+GET /mysql application.mysql
+GET /postgres Application.postgres
+GET /mongodb Application.mongodb
+
+# Import Menu routes
+*       /menu                                       module:menu
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+GET     /css/                                staticDir:public/stylesheets
+GET     /js/                                staticDir:public/javascripts
+GET     /img/                                staticDir:public/images
+
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}

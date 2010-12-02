@@ -1,0 +1,68 @@
+_Menu(root):
+    name: play
+    url: /
+    labels: 
+       - play
+       - root
+       - french
+
+_Menu(logout):
+    name: logout
+    url: /logout
+    labels:
+       - _global
+
+_Menu(doc):
+    name: learn
+    url: /doc
+    title: play documentation
+    parent: root
+    labels: 
+       - play
+       - doc
+       - french
+    
+_Menu(com):
+    name: community
+    url: /community?group=play
+    title: play community
+    parent: root
+    labels: 
+       - play
+       - com
+    
+_Menu(code):
+    name: code
+    url: /code
+    parent: root
+    labels: 
+       - play
+       - code
+    
+_Menu(module):
+    name: modules
+    url: /modules
+    parent: root
+    labels:
+       - play
+       - module
+       - french
+    
+_Menu(akka):
+    name: akka support
+    url: /modules/akka
+    parent: module
+    labels:
+       - play
+       - module
+       - akka
+    
+_Menu(bespin):
+    name: Bespin online editor
+    url: /modules/bespin
+    parent: module
+    labels:
+       - play
+       - module
+       - bespin
+    

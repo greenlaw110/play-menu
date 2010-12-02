@@ -53,9 +53,11 @@ public class _Menu extends Model implements IMenu {
     @PostLoad
     private void loadLabels_() {
         Logger.debug("loading labels ...");
-        if (labelStr_ == null)
-            labelStr_ = "";
-        labels = new HashSet(Arrays.asList(labelStr_.split(",")));
+        if (labelStr_ == null) {
+            labels = new HashSet();
+        } else {
+        	labels = new HashSet(Arrays.asList(labelStr_.split(",")));
+        }
     }
 
     @ManyToOne
@@ -126,6 +128,7 @@ public class _Menu extends Model implements IMenu {
 
     @Override
     public boolean hasLabel(String label) {
+    	if (null == label) return labels.size() == 0;
         return labels.contains(label);
     }
 

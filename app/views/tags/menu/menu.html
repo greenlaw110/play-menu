@@ -1,16 +1,15 @@
 %{
-    def caller = _caller
-    while (caller._caller) caller = caller._caller
+    def renderArgs = play.mvc.Scope.RenderArgs.current()
     
-    def _menu_top_list = caller._menu_top_list
-    _menu_current = _menu_current?:caller._menu_current
-    _menu_context = _menu_context?:caller._menu_context
-    _menu_label = _menu_label?:caller._menu_label
-    _menu_no_global = _menu_no_global?:caller._menu_no_global
+    def _menu_top_list = renderArgs._menu_top_list
+    _menu_current = _menu_current?:renderArgs._menu_current
+    _menu_context = _menu_context?:renderArgs._menu_context
+    _menu_label = _menu_label?:renderArgs._menu_label
+    _menu_no_global = _menu_no_global?:renderArgs._menu_no_global
     if (!_menu_top_list) _menu_top_list = play.modules.menu.MenuPlugin.menuInstance().getTopLevelMenus();
 }%
 
-#{menu.menu_ menu_top_list:_menu_top_list, menu_current: _menu_current, menu_context: _menu_context, menu_label: _menu_label, menu_no_global: _menu_no_global, menu_debug: _menu_debug/}
+#{menu.menu_ menu_top_list:_menu_top_list, menu_current: _menu_current, menu_context: _menu_context, menu_label: _menu_label, show_label: _show_label, menu_no_global: _menu_no_global, menu_debug: _menu_debug/}
 
 #{if _menu_debug}
 current: ${_menu_current} <br/>

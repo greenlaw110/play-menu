@@ -1,0 +1,49 @@
+MongoMenu(sql):
+    name: sql
+    url: /sql
+    title: sql database
+    labels: 
+       - play
+       - sql
+       - french
+    
+MongoMenu(non-sql):
+    name: non-sql
+    url: /non-sql
+    title: non sql database
+    labels: 
+       - play
+       - com
+    
+MongoMenu(mysql):
+    name: mysql
+    url: /mysql
+    parent: sql
+    labels: 
+       - sql
+       - mysql
+    
+MongoMenu(postgres):
+    name: postgres
+    url: /postgres
+    parent: sql
+    labels: postgres database
+       - sql
+       - postgres
+       - french
+    
+MongoMenu(mongodb):
+    name: mongodb
+    url: /mongodb
+    parent: non-sql
+    labels: mongodb database
+       - non-sql
+       - mongodb
+       - db
+    
+MongoMenu(logout):
+    name: logout
+    url: /logout
+    labels:
+       - _global
+

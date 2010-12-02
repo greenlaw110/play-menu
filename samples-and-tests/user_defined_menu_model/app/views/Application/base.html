@@ -1,0 +1,13 @@
+#{extends 'base.html'/}
+
+#{set menuType: 'Default Menu Implementation'/}
+
+#{form @setMenuClass()}
+    <input type="hidden" name="menuClass" value="models._Menu"/>
+    <input type="submit" value="default menu implementation"/>
+#{/form}
+
+#{form @setMenuClass()}
+    <input type="hidden" name="menuClass" value="models.MongoMenu"/>
+    <input type="submit" value="custom menu implementation"/>
+#{/form}
