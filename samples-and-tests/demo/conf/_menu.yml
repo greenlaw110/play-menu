@@ -12,7 +12,7 @@ _Menu(logout):
     labels:
        - _global
 
-_Menu(doc):
+doc:
     name: learn
     url: '@{Demo.doc()}'
     title: play documentation
@@ -22,7 +22,7 @@ _Menu(doc):
        - doc
        - french
     
-_Menu(com):
+com:
     name: community
     url: /community?group=play
     title: play community
@@ -31,7 +31,7 @@ _Menu(com):
        - play
        - com
     
-_Menu(code):
+code:
     name: code
     url: /code
     parent: root

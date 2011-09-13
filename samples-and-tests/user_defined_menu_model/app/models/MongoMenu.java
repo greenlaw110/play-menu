@@ -1,19 +1,22 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import play.Logger;
+import models._menu.IMenu;
+
+import org.bson.types.ObjectId;
+
 import play.modules.morphia.Model;
-import play.modules.morphia.utils.MorphiaFixtures;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Indexed;
-import com.google.code.morphia.annotations.Reference;
 
 
-@Entity(value="my_menu")
+@Entity(value="play_menu")
 public class MongoMenu extends Model implements IMenu {
     
     @Indexed(unique=true, dropDups=true)
@@ -24,8 +27,7 @@ public class MongoMenu extends Model implements IMenu {
     public String context;
     public Set<String> labels;
     
-    @Reference(value="p")
-    public MongoMenu parent;
+    private ObjectId parentId = null;
     
     @Override
     public String toString() {
@@ -77,67 +79,91 @@ public class MongoMenu extends Model implements IMenu {
     }
     
     @Override
-    public String getContext() {
-        return context;
-    }
-    
-    @Override
-    public void setContext(String context) {
-        this.context = context;
-    }
-    
-    @Override
     public boolean hasLabel(String label) {
         if (null == labels) return false;
         return labels.contains(label);
     }
     
     @Override
-    public void setLabels(Set<String> labels) {
+    public void setLabels(Collection<String> labels) {
         if (null == labels) return;
         this.labels = new HashSet(labels);
     }
     
     @Override
-    public IMenu getParentMenu() {
-        return parent;
+    public IMenu getParent() {
+        return (MongoMenu)q().filter("_id", parentId)._get();
+    }
+    
+    private MorphiaQuery parentFilter_() {
+        return MongoMenu.filter("parentId", this._getId());
     }
     
     @Override
     public List<IMenu> getSubMenus() {
-        return MongoMenu.filter("parent", this).asList();
-    }
-    
-    @Override
-    public List<IMenu> getSubMenusByContext(String context) {
-        return MongoMenu.filter("parent", this).filter("context", context).asList();
+        List<MongoMenu> menus = parentFilter_().asList();
+        List<IMenu> l = new ArrayList<IMenu>();
+        l.addAll(menus);
+        return l;
     }
     
     @Override
     public List<IMenu> getSubMenusByLabel(String label) {
-        return MongoMenu.filter("parent", this).filter("labels", label).asList();
+        List<MongoMenu> menus = parentFilter_().filter("labels", label).asList();
+        List<IMenu> l = new ArrayList<IMenu>();
+        l.addAll(menus);
+        return l;
     }
     
     @Override
-    public List<IMenu> getTopLevelMenus() {
-        return (List<IMenu>)filter("parent", null).asList();
+    public List<IMenu> _topLevelMenus() {
+        List<MongoMenu> menus = MongoMenu.filter("parentId", null).asList();
+        List<IMenu> l = new ArrayList<IMenu>();
+        l.addAll(menus);
+        return l;
     }
     
     @Override
-    public List<IMenu> getTopLevelMenusByContext(String context) {
-        return filter("parent", null).filter("context", context).asList();
+    public List<IMenu> _topLevelMenusByLabel(String label) {
+        List<MongoMenu> menus = MongoMenu.filter("parentId", null).filter("labels", label).asList();
+        List<IMenu> l = new ArrayList<IMenu>();
+        l.addAll(menus);
+        return l;
+    }
+
+    @Override
+    public List<IMenu> _all() {
+        return (List)MongoMenu.all().asList();
+    }
+
+    @Override
+    public long _count() {
+        return MongoMenu.count();
+    }
+
+    @Override
+    public IMenu _findById(String id) {
+        return (MongoMenu)MongoMenu.findById(id);
+    }
+
+    @Override
+    public Object _getId() {
+        return getId();
+    }
+
+    @Override
+    public IMenu _newInstance() {
+        return new MongoMenu();
+    }
+
+    @Override
+    public void _purge() {
+        ds().getCollection(MongoMenu.class).drop();
+    }
+
+    @Override
+    public void setParent(IMenu parent) {
+        parentId = (ObjectId)parent._getId();
     }
     
-    @Override
-    public List<IMenu> getTopLevelMenusByLabel(String label) {
-        return filter("parent", null).filter("labels", label).asList();
-    }
-    
-    @Override
-    public void loadMenu() {
-        Logger.info("loading menu conf...");
-        MorphiaFixtures.delete(models.MongoMenu.class);
-        MorphiaFixtures.load("menu.yml");
-        Logger.info("menu loaded");
-    }
 }

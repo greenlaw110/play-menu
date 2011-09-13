@@ -1,0 +1,2 @@
+require:
+    - play -> morphia 1.2.3beta1

@@ -1,8 +1,7 @@
 package controllers;
 
 
-import models.IMenu;
-import models._Menu;
+import models._menu.JPAMenu;
 import play.modules.menu.MenuPlugin;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -13,7 +12,7 @@ public class Application extends Controller {
     public static void before() {
         Class menuClass = MenuPlugin.menuInstance().getClass();
         renderArgs.put("menuClass", menuClass.getName());
-        if (menuClass.equals(_Menu.class)) {
+        if (menuClass.equals(JPAMenu.class)) {
             renderArgs.put("style", 2);
         }
     }
@@ -35,12 +34,7 @@ public class Application extends Controller {
     }
     
     public static void modules(String id) {
-        render();
-    }
-    
-    public static void setMenuClass(String menuClass) {
-        MenuPlugin.setMenuClass(menuClass);
-        index();
+        render(id);
     }
     
     public static void sql() {

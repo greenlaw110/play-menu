@@ -1,4 +1,4 @@
-_Menu(root):
+root:
     name: play
     url: /
     labels: 
