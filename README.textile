@@ -1,7 +1,28 @@
 h1. Playframework Menu module
 
+h2. <a>What's New in v1.1a
+
+* Add Mongo menu implementation
+* Automatically choose mongo implementation if Morphia or MongoDB plugin found
+* IMenu.getContext() dropped, use IMenu.hasLabel() instead
+* Support user define the yaml file name with "menu.yamlFile" configuration
+* Always load menu from yaml file on application startup if "menu.loadFrom" is "yml"
+* Support load all menus into memory if "menu.cache" is set to 'true'
+* Simplified menu yaml file
+
+bc. 
+# previously
+_Menu(home):
+    name: home
+    url: '@{Application.index()}'
+# now
+home:
+    name: home
+    url: '@{Application.index()}'
+    
+
 h2. <a>What's New in v1.0c
-* Support reverse url mapping
+* Support reverse url mapping. I.e. in your _menu.yml file you can define url as '@{Demo.index()}'
 
 The Menu module is developed to enable Playframework application developer to quickly implement web navigation menu
 <script type="text/javascript" src="http://www.ohloh.net/p/485872/widgets/project_users_logo.js"></script>
@@ -20,10 +41,7 @@ h2. <a>features</a>
 
 h2. TODO List
 
-* Add javascript to support menu fold
-* Add more CSS style
-* Menu Configuration
-* Add configuration to disable default menu model implementation
+* Add themes (js/css)
 
 h2. <a>Dependencies</a>
 
@@ -41,15 +59,16 @@ h3. <a>Prepare _menu.yml file</a>
 
 you can define menu hierarchies in _menu.yml file (if you use default menu implementation), otherwise, you should define menu hierarchies in corresponding files loaded in your customized menu implementation ".loadMenu()" method. But the content of this file should be the same.
 
-bc.. # Sample _menu.yml
+bc.. 
+# Sample _menu.yml
  
-_Menu(play):
+play:
     name: play
     url: /
     labels:
         - play
     
-_Menu(doc):
+doc:
     name: learn
     url: /doc
     title: play documentation
@@ -58,7 +77,7 @@ _Menu(doc):
         - play
         - doc
     
-_Menu(com):
+com:
     name: community
     url: /community
     title: play community
@@ -67,7 +86,7 @@ _Menu(com):
         - play
         - community
     
-_Menu(code):
+code:
     name: code
     url: /code
     parent: play
@@ -75,7 +94,7 @@ _Menu(code):
         - play
         - code
     
-_Menu(module):
+module:
     name: modules
     url: /modules
     parent: play
@@ -83,7 +102,7 @@ _Menu(module):
         - play
         - module
     
-_Menu(akka):
+akka:
     name: akka support
     url: /modules/akka
     parent: module
@@ -91,7 +110,7 @@ _Menu(akka):
         - play
         - module
     
-_Menu(bespin):
+bespin:
     name: Bespin online editor
     url: /modules/bespin
     parent: module
@@ -99,7 +118,7 @@ _Menu(bespin):
         - play
         - module
     
-_Menu(user):
+user:
     name: Manage user
     url: /admin/users
     context: admin # context is deprecated, use labels instead
@@ -111,37 +130,21 @@ p. As you can find in the above sample _menu.yml file, each menu item can have f
 * name
 * url
 * title (optional)
-* context (optional, could be used to partition your navigation menu depends on the context, e.g. admin)
+* labels (optional, could be used to partition your navigation menu depends on the context, e.g. admin)
 * parent (optional, if no parent specified, then this entry is the top level menu)
 
 p. Start from v1.0c, you can use reverse URL mapping in menu yml file, e.g. <samp>url: '@{Application.index}' </samp> will map to '/'. Note, you must use quotation mark "'" to use the reverse URL mapping style.
 
 h3. <a>Use menu tag in your template</a>
 
-p. Basically you don't need to do anything else once you have created your _menu.yml file. Just make sure you have configured db in your application.conf file because the default menu implementation use JPA. Now you can easily insert menu in your groovy template file. For example:
+p. Basically you don't need to do anything else once you have created your _menu.yml file. Just make sure you have configured db in your application.conf file because the default menu implementation use JPA (unless you have Morphia or MongoDB plugin enabled, in which case MongoMenu will be used). Now you can easily insert menu in your groovy template file. For example:
 
-bc.. <div id='navigation'>
+bc.. 
+<div id='navigation'>
    #{menu.menu /}
- </div>
+</div>
  
-p. That's it, easy, isn't? One important note, if you decide to use default _Menu model built-in the module (I guess 90% case you will use the built-in one), make sure *you delete the _Menus.java in menu/app/controllers directory*. That one is prepared in case you have your own IMenu model implementation, just as demonstrated in the sample app.
-
-h3. <a>Create your own Menu model implementation</a>
-
-p. It's possible that you will not be able to use the default Menu impl. One obvious reason is GAE does not support JPA. In the case, you need to implement your own IMenu in your models package. The demo application provides a Menu model implementation with mongodb, you can refer to it on how to implement your own Menu model. There are several notes need to be mentioned:
-
-* Always implement your menu model using models.Menu as the package/class name. Otherwise you can't benefit from controllers._Menus which prepare renderArgs for menu.menu tag.
-* Plugin will always load _menu.yml unless you disable it, i.e. menu.no_def_impl=true. You can choose to put your menu structure in that file, or (most probably) implement your own bootstrap load mechanism. In the demo app, there is a Bootstrap job created OnApplicationStart to load menu.yml file. The load process use Fixtures.load because Morphia Model support that. If you are using Model doesnot support Fixture.load, you are on your own to create and load your own intial data file or input the menu struture data in your db storage directly.
-
-h3. <a>Define Context</a>
-
-p. Context is deprecated, use label instead
-p. Normally you won't touch renderArgs because the module is smart enough to determine your top menus and the current menu being selected. One common case you need to touch with the renderArgs is to define your context, for example, in the base controller of your administration controllers, you will probably have the following codes:
-
-bc.. @Before
-static void setMenuContext() {
-    renderArgs.put("_menu_context", "admin");
-}
+p. That's it, easy, isn't? -One important note, if you decide to use default _Menu model built-in the module (I guess 90% case you will use the built-in one), make sure *you delete the _Menus.java in menu/app/controllers directory*. That one is prepared in case you have your own IMenu model implementation, just as demonstrated in the sample app-.
 
 h3. <a>Use label to group menu</a>
 
@@ -163,6 +166,13 @@ h3. <a>Other RenderArgs</a>
 
 * _menu_top_list: a list of IMenu object to be rendered in the web page
 * _menu_current: url indicate the current menu
+
+h3. <a>Create your own Menu model implementation</a>
+
+p. It's possible that you will not be able to use the default Menu impl. One obvious reason is GAE does not support JPA. In the case, you need to implement your own IMenu in your models package. The demo application provides a Menu model implementation with mongodb, you can refer to it on how to implement your own Menu model. -There are several notes need to be mentioned:-
+
+* -Always implement your menu model using models.Menu as the package/class name. Otherwise you can't benefit from controllers._Menus which prepare renderArgs for menu.menu tag.-
+* -Plugin will always load _menu.yml unless you disable it, i.e. menu.no_def_impl=true. You can choose to put your menu structure in that file, or (most probably) implement your own bootstrap load mechanism. In the demo app, there is a Bootstrap job created OnApplicationStart to load menu.yml file. The load process use Fixtures.load because Morphia Model support that. If you are using Model doesnot support Fixture.load, you are on your own to create and load your own intial data file or input the menu struture data in your db storage directly-.
 
 h3. How to customize look&feel of the navigation menu rendered in my web page?
 

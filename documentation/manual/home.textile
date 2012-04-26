@@ -1,6 +1,6 @@
 h1. Playframework Menu module
 
-h2. <a>What's New in v1.1
+h2. <a>What's New in v1.1a
 
 * Add Mongo menu implementation
 * Automatically choose mongo implementation if Morphia or MongoDB plugin found
