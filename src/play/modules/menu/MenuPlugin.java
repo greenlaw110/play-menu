@@ -30,12 +30,12 @@ import play.vfs.VirtualFile;
 
 /**
  * The plugin for the Menu module.
- * 
+ *
  * @author greenlaw110@gmail.com
  */
 public class MenuPlugin extends PlayPlugin {
-    
-    public static final String VERSION = "1.1a";
+
+    public static final String VERSION = "1.1b";
 
     private static String msg_(String msg, Object... args) {
         return String.format("MenuPlugin-" + VERSION + "> %1$s",
@@ -43,7 +43,7 @@ public class MenuPlugin extends PlayPlugin {
     }
 
     private static IMenu fact_ = null;
-    
+
     private static void setMenuClass_(String clzStr) {
         Logger.info(msg_("set menu class: %s", clzStr));
         try {
@@ -53,7 +53,7 @@ public class MenuPlugin extends PlayPlugin {
             throw new RuntimeException(e);
         }
     }
-    
+
     public static IMenu menuInstance() {
         try {
             return fact_._newInstance();
@@ -61,11 +61,11 @@ public class MenuPlugin extends PlayPlugin {
             throw new RuntimeException(e);
         }
     }
-    
+
     private static boolean isJPAModel_() {
         return JPAMenu.class.equals(fact_.getClass());
     }
-    
+
     @Override
     public void onConfigurationRead() {
         init_();
@@ -79,7 +79,7 @@ public class MenuPlugin extends PlayPlugin {
             Play.configuration.put("jpa.entities", jpaEntities);
         }
     }
-    
+
     private void init_() {
         Properties p = Play.configuration;
         String menuClass = p.getProperty("menu.class");
@@ -95,7 +95,7 @@ public class MenuPlugin extends PlayPlugin {
         if (null == menuClass) menuClass = "models._menu.JPAMenu";
         setMenuClass_(menuClass);
     }
-    
+
     private static final Pattern P_K = Pattern.compile("([^(]+)\\(([^)]+)\\)");
     public static void load(String... ymlFiles) {
         VirtualFile vf = virtualFile_(ymlFiles);
@@ -112,7 +112,7 @@ public class MenuPlugin extends PlayPlugin {
             Object o = yaml.load(renderedYaml);
             if (o instanceof LinkedHashMap<?, ?>) {
                 Map<String, IMenu> all = new HashMap<String, IMenu>();
-                @SuppressWarnings("unchecked") 
+                @SuppressWarnings("unchecked")
                 Map<Object, Map<?, ?>> objects = (Map<Object, Map<?, ?>>) o;
                 Map<Object, String> parents = new HashMap<Object, String>();
                 for (Object key : objects.keySet()) {
@@ -128,7 +128,7 @@ public class MenuPlugin extends PlayPlugin {
                     String title = (String)mm.get("title");
                     List<String> labels = (List<String>)mm.get("labels");
                     String parent = (String)mm.get("parent");
-                    
+
                     IMenu menu = menuInstance();
                     menu.setName(name);
                     menu.setUrl(url);
@@ -161,7 +161,7 @@ public class MenuPlugin extends PlayPlugin {
             throw new RuntimeException(e);
         }
     }
-    
+
     /*
      * return the first file found by a set of names specified
      */
@@ -173,7 +173,7 @@ public class MenuPlugin extends PlayPlugin {
         }
         return null;
     }
-    
+
     private void load_() {
         startTx_(); // to init JPA em if needed
         IMenu m = menuInstance();
@@ -191,14 +191,14 @@ public class MenuPlugin extends PlayPlugin {
         commitTx_(); // close the previous Tx if it's started
         String fileName = Play.configuration.getProperty("menu.yamlFile", "_menu.yml");
         VirtualFile yamlFile = virtualFile_(fileName);
-        
+
         if (yamlFile == null) {
             Logger.warn(msg_("Couldn't find menu plugin initial file: %s", fileName));
             return;
         }
         load_(yamlFile);
     }
-    
+
     private static void startTx_() {
         if (isJPAModel_()) {
             JPAPlugin.startTx(false);
@@ -221,32 +221,32 @@ public class MenuPlugin extends PlayPlugin {
     public void afterApplicationStart() {
         load_();
     }
-    
+
     @Override
     public void beforeActionInvocation(Method actionMethod) {
         Scope.RenderArgs binding = Scope.RenderArgs.current();
         Request request = Request.current();
         binding.put("_menu_current", request.url);
-        binding.put("_menu_editing_url", Play.configuration.getProperty("menu.editing.url", Router.reverse("_menu.Configurator.edit").url));
+        //binding.put("_menu_editing_url", Play.configuration.getProperty("menu.editing.url", Router.reverse("_menu.Configurator.edit").url));
 
         setRenderArgs_("_menu_context");
         setRenderArgs_("_menu_label");
     }
-    
+
     private static void setRenderArgs_(String name) {
         String val = Params.current().get(name);
         if (null == val) val = Session.current().get(name);
         if (null != val) RenderArgs.current().put(name, val);
     }
-    
+
     private static Pattern p1_ = null; {
         p1_ = Pattern.compile("'(.*)'");
     }
-    
+
     private static Pattern p2_ = null; {
         p2_ = Pattern.compile("@\\{([\\w\\.]*).*\\}");
     }
-    
+
     public static String url(IMenu menu) {
         String s = menu.getUrl();
         if (null == s) return null;
@@ -263,36 +263,36 @@ public class MenuPlugin extends PlayPlugin {
             return s;
         }
     }
-    
+
     static List<IMenu> allMenus() {
         return fact_._all();
     }
-    
+
     public static MenuPlugin instance() {
         return (MenuPlugin) Play.pluginCollection.getPluginInstance(MenuPlugin.class);
     }
-    
+
     private static MenuCache cache_ = new MenuCache();
     private static boolean cacheEnabled_() {
         String s = Play.configuration.getProperty("menu.cache", "false");
         return Boolean.parseBoolean(s);
     }
-    
+
     public static List<IMenu> getSubMenus(IMenu parentMenu) {
         if (cacheEnabled_()) return cache_.getSubMenus(parentMenu);
         return parentMenu.getSubMenus();
     }
-    
+
     public static List<IMenu> getSubMenusByLabel(IMenu parentMenu, String label) {
         if (cacheEnabled_()) return cache_.getSubMenusByLabel(parentMenu, label);
         return parentMenu.getSubMenusByLabel(label);
     }
-    
+
     public static IMenu _find(String id) {
         if (cacheEnabled_()) return cache_._find(id);
         return fact_._findById(id);
     }
-    
+
     public static List<IMenu> _topLevelMenus() {
         if (cacheEnabled_()) return cache_._topLevelMenus();
         return fact_._topLevelMenus();
@@ -302,7 +302,7 @@ public class MenuPlugin extends PlayPlugin {
         if (cacheEnabled_()) return cache_._topLevelMenusByLabel(label);
         return fact_._topLevelMenusByLabel(label);
     }
-    
+
     public static void _purge() {
         fact_._purge();
     }

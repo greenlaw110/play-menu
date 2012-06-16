@@ -1,0 +1,18 @@
+@import models._menu.*, play.modules.menu.*
+@args List<IMenu> _menu_top_list, String _menu_current, String _menu_label, boolean _menu_no_global, boolean _show_label, boolean _menu_debug
+@{
+    if (null == _menu_top_list) {
+        _menu_top_list = MenuPlugin._topLevelMenus();
+    }
+}
+
+@menu.menu_()
+
+#{menu.menu_ menu_top_list:_menu_top_list, menu_current: _menu_current, menu_label: _menu_label, show_label: _show_label, menu_no_global: _menu_no_global, menu_debug: _menu_debug, menu_editing: _menu_editing, menu_editing_url: _menu_editing_url /}
+
+#{if _menu_debug}
+current: ${_menu_current} <br/>
+label: ${_menu_label} <br/>
+no_global: ${_menu_no_global}
+#{/if}
+

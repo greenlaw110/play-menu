@@ -1,0 +1,47 @@
+@import models._menu.*, play.modules.menu.*
+@args List<IMenu> _menu_top_list, String _menu_current, String _menu_label, boolean _menu_no_global, boolean _show_label, boolean _menu_debug
+
+<ul class="_menu_list">
+@if(_show_label && null != _menu_label) {
+    <li class="_menu_label"><span>@msg(_menu_label)</span></li>
+}
+@for(IMenu mi: _menu_top_list) {
+    @{
+        boolean showBylabel = mi.hasLabel(_menu_label);
+        boolean showGlobal = !_menu_no_global && mi.hasLabel("_global");
+        boolean showMenu = showGlobal || showByLabel;
+        String url = MenuPlugin.url(mi);
+        MenuPlugin plugin = MenuPlugin.instance();
+        List<IMenu> subMenus = plugin.getSubMenus(mi);
+    }
+    @if (showMenu) {
+        @{
+            String cls = mi.getCssClass();
+            cls = null == cls ? "" : cls + " ";
+            boolean isCur = false;
+            if (null != url) {
+                url = url.split("\\?")[0];
+                if (null != _menu_current) {
+                    isCur = url.endsWith(_menu_current.split("\\?")[0]);
+                }
+                if (isCur) {
+                    cls += "_menu_current";
+                }
+            }
+            if (subMenus.size() > 0) cls += " _menu_expanded";
+        }
+        <li id="_mi_@mi.getName()" class='cls'>
+            @if (null != url && !isCur) {
+            <a href="@url" @if (mi.title != null) title="@msg(mi.title)"@>
+            }
+
+            <span>@msg(mi.name)</span>
+            @if (null != url && !isCur) </a> @
+
+            @if (subMenus.size() > 0) {
+            @menu.menu_(menu_top_list: subMenus)
+            }
+        </li>
+    }
+}
+</ul>
