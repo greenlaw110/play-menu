@@ -1,18 +1,33 @@
 @import models._menu.*, play.modules.menu.*
-@args List<IMenu> _menu_top_list, String _menu_current, String _menu_label, boolean _menu_no_global, boolean _show_label, boolean _menu_debug
+@args List<IMenu> menu_top_list, String _menu_current, String menu_label, String _menu_label, boolean menu_no_global, boolean show_label, boolean menu_debug
 @{
-    if (null == _menu_top_list) {
-        _menu_top_list = MenuPlugin._topLevelMenus();
+    if (null == menu_top_list) {
+        menu_top_list = MenuPlugin._topLevelMenus();
+        _properties.put("menu_top_list", menu_top_list);
+    }
+    if (s().isEmpty(_menu_label)) {
+        _menu_label = menu_label;
+        _properties.put("_menu_label", menu_label);
     }
 }
 
-@menu.menu_()
+@menu_()
 
-#{menu.menu_ menu_top_list:_menu_top_list, menu_current: _menu_current, menu_label: _menu_label, show_label: _show_label, menu_no_global: _menu_no_global, menu_debug: _menu_debug, menu_editing: _menu_editing, menu_editing_url: _menu_editing_url /}
+@if (menu_debug) {
+<pre>
+    current: @_menu_current
+    label: @_menu_label
+    no_global: @menu_no_global
+</pre>
+}
+
+@*
+#{menu.menu_ menu_top_list:_menu_top_list, _menu_current: __menu_current, _menu_label: __menu_label, show_label: _show_label, menu_no_global: _menu_no_global, menu_debug: _menu_debug, menu_editing: _menu_editing, menu_editing_url: _menu_editing_url /}
 
 #{if _menu_debug}
-current: ${_menu_current} <br/>
-label: ${_menu_label} <br/>
+current: ${__menu_current} <br/>
+label: ${__menu_label} <br/>
 no_global: ${_menu_no_global}
 #{/if}
 
+*@

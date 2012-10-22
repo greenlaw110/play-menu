@@ -1,0 +1,23 @@
+@extends(base.html)
+@args String id
+@set(subTitle: "Modules")
+
+
+<h3>Module Repositories</h3>
+
+<p>
+    Here you can find great modules contributed by the play community. Make
+    your choice and add instant power to your application. Need help about
+    modules? Check the <a href="/documentation/1.0.2/modules">manual page</a>.
+</p>
+<p>
+    Are you a module developer? Enter in the <a href="/modules/developers">
+    developers zone</a>.
+</p>
+
+@if(null != id){
+<h3>@id module</h3>
+
+@id is about ...
+}
+...
