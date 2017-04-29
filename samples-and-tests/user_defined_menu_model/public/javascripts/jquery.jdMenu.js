@@ -12,11 +12,11 @@
  */
 
 // This initializes the menu
-$(function() {
+$(() => {
 	$('ul.jd_menu').jdMenu();
 });
 
-(function($){
+(($ => {
 	function addEvents(ul) {
 		var settings = $.data( $(ul).parents().andSelf().filter('ul.jd_menu')[0], 'jdMenuSettings' );
 		$('> li', ul)
@@ -27,7 +27,7 @@ $(function() {
 					clearTimeout( this.$jdTimer );
 					var enter = ( evt.type == 'mouseenter' );
 					var fn = ( enter ? showMenu : hideMenu );
-					this.$jdTimer = setTimeout(function() {
+					this.$jdTimer = setTimeout(() => {
 						fn( ul[0], settings.onAnimate, settings.isVertical );
 					}, enter ? settings.showDelay : settings.hideDelay );
 				}
@@ -68,7 +68,7 @@ $(function() {
 					}
 				})
 				.filter('.accessible')
-					.bind('click.jdmenu', function(evt) {
+					.bind('click.jdmenu', evt => {
 						evt.preventDefault();
 					});
 	}
@@ -165,7 +165,7 @@ $(function() {
 	// Private methods and logic
 	$(window)
 		// Bind a click event to hide all visible menus when the document is clicked
-		.bind('click.jdmenu', function(){
+		.bind('click.jdmenu', () => {
 			$('ul.jd_menu ul:visible').jdMenuHide();
 		});
-})(jQuery);
+}))(jQuery);

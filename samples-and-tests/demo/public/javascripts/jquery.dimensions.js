@@ -10,46 +10,50 @@
  * Requires: jQuery 1.2+
  */
 
-(function($){
+(($ => {
 	
 $.dimensions = {
 	version: '@VERSION'
 };
 
 // Create innerHeight, innerWidth, outerHeight and outerWidth methods
-$.each( [ 'Height', 'Width' ], function(i, name){
+$.each( [ 'Height', 'Width' ], (i, name) => {
 	
 	// innerHeight and innerWidth
 	$.fn[ 'inner' + name ] = function() {
-		if (!this[0]) return;
-		
-		var torl = name == 'Height' ? 'Top'    : 'Left',  // top or left
-		    borr = name == 'Height' ? 'Bottom' : 'Right'; // bottom or right
-		
-		return this.is(':visible') ? this[0]['client' + name] : num( this, name.toLowerCase() ) + num(this, 'padding' + torl) + num(this, 'padding' + borr);
-	};
+        if (!this[0]) return;
+
+        var // top or left
+        torl = name == 'Height' ? 'Top'    : 'Left'; // bottom or right
+
+        var borr = name == 'Height' ? 'Bottom' : 'Right';
+
+        return this.is(':visible') ? this[0]['client' + name] : num( this, name.toLowerCase() ) + num(this, 'padding' + torl) + num(this, 'padding' + borr);
+    };
 	
 	// outerHeight and outerWidth
 	$.fn[ 'outer' + name ] = function(options) {
-		if (!this[0]) return;
-		
-		var torl = name == 'Height' ? 'Top'    : 'Left',  // top or left
-		    borr = name == 'Height' ? 'Bottom' : 'Right'; // bottom or right
-		
-		options = $.extend({ margin: false }, options || {});
-		
-		var val = this.is(':visible') ? 
+        if (!this[0]) return;
+
+        var // top or left
+        torl = name == 'Height' ? 'Top'    : 'Left'; // bottom or right
+
+        var borr = name == 'Height' ? 'Bottom' : 'Right';
+
+        options = $.extend({ margin: false }, options || {});
+
+        var val = this.is(':visible') ? 
 				this[0]['offset' + name] : 
 				num( this, name.toLowerCase() )
 					+ num(this, 'border' + torl + 'Width') + num(this, 'border' + borr + 'Width')
 					+ num(this, 'padding' + torl) + num(this, 'padding' + borr);
-		
-		return val + (options.margin ? (num(this, 'margin' + torl) + num(this, 'margin' + borr)) : 0);
-	};
+
+        return val + (options.margin ? (num(this, 'margin' + torl) + num(this, 'margin' + borr)) : 0);
+    };
 });
 
 // Create scrollLeft and scrollTop methods
-$.each( ['Left', 'Top'], function(i, name) {
+$.each( ['Left', 'Top'], (i, name) => {
 	$.fn[ 'scroll' + name ] = function(val) {
 		if (!this[0]) return;
 		
@@ -75,10 +79,16 @@ $.each( ['Left', 'Top'], function(i, name) {
 });
 
 $.fn.extend({
-	position: function() {
-		var left = 0, top = 0, elem = this[0], offset, parentOffset, offsetParent, results;
-		
-		if (elem) {
+	position() {
+        var left = 0;
+        var top = 0;
+        var elem = this[0];
+        var offset;
+        var parentOffset;
+        var offsetParent;
+        var results;
+
+        if (elem) {
 			// Get *real* offsetParent
 			offsetParent = this.offsetParent();
 			
@@ -100,11 +110,11 @@ $.fn.extend({
 				left: offset.left - parentOffset.left
 			};
 		}
-		
-		return results;
-	},
+
+        return results;
+    },
 	
-	offsetParent: function() {
+	offsetParent() {
 		var offsetParent = this[0].offsetParent;
 		while ( offsetParent && (!/^body|html$/i.test(offsetParent.tagName) && $.css(offsetParent, 'position') == 'static') )
 			offsetParent = offsetParent.offsetParent;
@@ -116,4 +126,4 @@ function num(el, prop) {
 	return parseInt($.curCSS(el.jquery?el[0]:el,prop,true))||0;
 };
 
-})(jQuery);
+}))(jQuery);
