@@ -10,7 +10,7 @@
  * Built upon jQuery 1.2.2 (http://jquery.com)
  * This also requires the jQuery dimensions plugin
  */
-(function($){
+(($ => {
 	/**
 	 * This function centers an absolutely positioned element
 	 */
@@ -303,4 +303,4 @@
 			}
 		});
 	};
-})(jQuery);
+}))(jQuery);
